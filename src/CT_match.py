@@ -1,6 +1,7 @@
 import pymysql
 import pymysql.cursors
 import config
+from collections import Counter
 
 # Establish a database connection
 connection = pymysql.connect(
@@ -80,8 +81,8 @@ try:
             if target_len != len(table_b_row_list): # 길이가 다른 경우는, 일치하지 않는 경우이다.
                 continue
             else:
-                common_elements = [element for element in table_a_row_list if element in table_b_row_list]
-                if target_len == len(common_elements):
+                are_equal = Counter(map(tuple, table_a_row_list)) == Counter(map(tuple, table_b_row_list))
+                if are_equal is True:
                     cursor_insert = connection.cursor()
                     sql_insert = f'''
                     INSERT INTO {TABLE_C_TARGET} (file_id) VALUES (%s) 
